@@ -10,6 +10,7 @@ import com.runssnail.springcloud.stream.binder.ons.properties.OnsProducerPropert
 import org.springframework.cloud.stream.binder.ExtendedProducerProperties;
 import org.springframework.integration.handler.AbstractReplyProducingMessageHandler;
 import org.springframework.messaging.Message;
+import org.springframework.util.Assert;
 
 import java.util.Properties;
 
@@ -35,9 +36,14 @@ public class OnsProducerMessageHandler extends AbstractReplyProducingMessageHand
     protected void doInit() {
         super.doInit();
 
+        String producerId = producerProperties.getExtension().getProducerId();
+
+        Assert.notNull(producerId, "The producerId is required, you can use 'spring.cloud.stream.ons.bindings.[channelName].producer.producerId' to setting");
+
+
         Properties properties = new Properties();
         // 您在 MQ 控制台创建的 Producer ID
-        properties.put(PropertyKeyConst.ProducerId, configurationProperties.getProducerId());
+        properties.put(PropertyKeyConst.ProducerId, producerId);
         // 鉴权用 AccessKey，在阿里云服务器管理控制台创建
         properties.put(PropertyKeyConst.AccessKey, configurationProperties.getAccessKey());
         // 鉴权用 SecretKey，在阿里云服务器管理控制台创建

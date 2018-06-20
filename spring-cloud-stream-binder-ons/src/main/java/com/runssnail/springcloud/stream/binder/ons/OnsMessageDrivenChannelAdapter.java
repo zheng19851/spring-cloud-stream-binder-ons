@@ -15,6 +15,8 @@ import org.springframework.cloud.stream.binder.ExtendedConsumerProperties;
 import org.springframework.cloud.stream.provisioning.ConsumerDestination;
 import org.springframework.integration.endpoint.MessageProducerSupport;
 import org.springframework.messaging.Message;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.Properties;
 
@@ -48,9 +50,17 @@ public class OnsMessageDrivenChannelAdapter extends MessageProducerSupport {
     @Override
     protected void doStart() {
 
+        String consumerId = this.consumerProperties.getExtension().getConsumerId();
+
+        if (StringUtils.isEmpty(consumerId)) {
+            consumerId = this.consumerGroup;
+        }
+
+        Assert.notNull(consumerId, "The consumerId is required, you can use 'spring.cloud.stream.bindings.[channelName].group' or 'spring.cloud.stream.ons.binder.consumerId' to setting");
+
         Properties properties = new Properties();
-        // 您在 MQ 控制台创建的 Producer ID
-        properties.put(PropertyKeyConst.ConsumerId, configurationProperties.getConsumerId());
+        // 您在 MQ 控制台创建的 consumer ID
+        properties.put(PropertyKeyConst.ConsumerId, consumerId);
         // 鉴权用 AccessKey，在阿里云服务器管理控制台创建
         properties.put(PropertyKeyConst.AccessKey, configurationProperties.getAccessKey());
         // 鉴权用 SecretKey，在阿里云服务器管理控制台创建
