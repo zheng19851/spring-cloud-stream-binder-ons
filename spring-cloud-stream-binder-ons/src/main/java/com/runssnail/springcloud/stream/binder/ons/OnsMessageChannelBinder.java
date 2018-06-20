@@ -1,6 +1,5 @@
 package com.runssnail.springcloud.stream.binder.ons;
 
-import com.aliyun.openservices.ons.api.Producer;
 import com.runssnail.springcloud.stream.binder.ons.properties.OnsBinderConfigurationProperties;
 import com.runssnail.springcloud.stream.binder.ons.properties.OnsConsumerProperties;
 import com.runssnail.springcloud.stream.binder.ons.properties.OnsExtendedBindingProperties;
@@ -25,8 +24,6 @@ public class OnsMessageChannelBinder extends AbstractMessageChannelBinder<Extend
         ExtendedProducerProperties<OnsProducerProperties>, OnsTopicProvisioner>
         implements ExtendedPropertiesBinder<MessageChannel, OnsConsumerProperties, OnsProducerProperties> {
 
-
-    private Producer producer;
 
     private OnsBinderConfigurationProperties configurationProperties;
 
@@ -58,10 +55,8 @@ public class OnsMessageChannelBinder extends AbstractMessageChannelBinder<Extend
     @Override
     protected MessageHandler createProducerMessageHandler(ProducerDestination destination, ExtendedProducerProperties<OnsProducerProperties> producerProperties, MessageChannel errorChannel) throws Exception {
 
-
         OnsProducerMessageHandler messageHandler = new OnsProducerMessageHandler(destination.getName(), configurationProperties, producerProperties);
         messageHandler.setBeanFactory(this.getBeanFactory());
-        messageHandler.setProducer(this.producer);
         return messageHandler;
     }
 
@@ -99,11 +94,4 @@ public class OnsMessageChannelBinder extends AbstractMessageChannelBinder<Extend
         this.extendedBindingProperties = extendedBindingProperties;
     }
 
-    public Producer getProducer() {
-        return producer;
-    }
-
-    public void setProducer(Producer producer) {
-        this.producer = producer;
-    }
 }

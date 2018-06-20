@@ -1,6 +1,8 @@
 package com.runssnail.springcloud.stream.binder.ons;
 
+import com.aliyun.openservices.ons.api.ONSFactory;
 import com.aliyun.openservices.ons.api.Producer;
+import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.SendResult;
 import com.runssnail.springcloud.stream.binder.ons.properties.OnsBinderConfigurationProperties;
 import com.runssnail.springcloud.stream.binder.ons.properties.OnsProducerProperties;
@@ -8,7 +10,8 @@ import com.runssnail.springcloud.stream.binder.ons.properties.OnsProducerPropert
 import org.springframework.cloud.stream.binder.ExtendedProducerProperties;
 import org.springframework.integration.handler.AbstractReplyProducingMessageHandler;
 import org.springframework.messaging.Message;
-import org.springframework.util.Assert;
+
+import java.util.Properties;
 
 public class OnsProducerMessageHandler extends AbstractReplyProducingMessageHandler {
 
@@ -32,7 +35,20 @@ public class OnsProducerMessageHandler extends AbstractReplyProducingMessageHand
     protected void doInit() {
         super.doInit();
 
-        Assert.notNull(this.producer, "Producer is required");
+        Properties properties = new Properties();
+        // 您在 MQ 控制台创建的 Producer ID
+        properties.put(PropertyKeyConst.ProducerId, configurationProperties.getProducerId());
+        // 鉴权用 AccessKey，在阿里云服务器管理控制台创建
+        properties.put(PropertyKeyConst.AccessKey, configurationProperties.getAccessKey());
+        // 鉴权用 SecretKey，在阿里云服务器管理控制台创建
+        properties.put(PropertyKeyConst.SecretKey, configurationProperties.getSecretKey());
+        // 设置 TCP 接入域名（此处以公共云的公网接入为例）
+        properties.put(PropertyKeyConst.ONSAddr, configurationProperties.getOnsAddress());
+
+        Producer producer = ONSFactory.createProducer(properties);
+        producer.start();
+
+        this.producer = producer;
 
     }
 
@@ -44,11 +60,4 @@ public class OnsProducerMessageHandler extends AbstractReplyProducingMessageHand
         return null;
     }
 
-    public Producer getProducer() {
-        return producer;
-    }
-
-    public void setProducer(Producer producer) {
-        this.producer = producer;
-    }
 }
