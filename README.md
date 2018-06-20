@@ -31,6 +31,6 @@ or
     spring.cloud.stream.ons.binder.accessKey | 阿里云accessKey |
     spring.cloud.stream.ons.binder.secretKey | 阿里云secretKey |
     spring.cloud.stream.ons.binder.onsAddress | ons接入点 |
-    spring.cloud.stream.ons.binder.producerId | 生产者ID，接入应用必须设置 |
-    spring.cloud.stream.ons.binder.consumerId | 消费者ID，zipkin-server必须设置 |
+    spring.cloud.stream.ons.bindings.[channelName].producer.producerId | 生产者ID，接入应用必须设置，例如：spring.cloud.stream.ons.bindings.sleuth.producer.producerId=PID-zipkin |
+    spring.cloud.stream.ons.bindings.[channelName].consumer.consumerId | 消费者ID，zipkin-server必须设置，例如：spring.cloud.stream.ons.bindings.sleuth.consumer.consumerId=CID-zipkin |
  
