@@ -33,7 +33,7 @@ public class OnsTopicProvisioner implements ProvisioningProvider<ExtendedConsume
     public ProducerDestination provisionProducerDestination(String name, ExtendedProducerProperties<OnsProducerProperties> properties) throws ProvisioningException {
 
         if (this.logger.isInfoEnabled()) {
-            this.logger.info("Using RocketMQ topic for outbound: {}", name);
+            this.logger.info("Using aliyun ons topic for outbound: {}", name);
         }
 
         int partitions = properties.getPartitionCount();
@@ -54,7 +54,7 @@ public class OnsTopicProvisioner implements ProvisioningProvider<ExtendedConsume
             throw new IllegalArgumentException("Instance count cannot be zero");
         }
 
-        int partitionCount = properties.getInstanceCount() * properties.getConcurrency();
+        // int partitionCount = properties.getInstanceCount() * properties.getConcurrency();
 
         ConsumerDestination consumerDestination = new OnsConsumerDestination(name);
 
