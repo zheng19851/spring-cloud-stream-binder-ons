@@ -52,9 +52,16 @@ public class OnsMessageChannelBinder extends AbstractMessageChannelBinder<Extend
     }
 
 
-    @Override
+//    @Override
     protected MessageHandler createProducerMessageHandler(ProducerDestination destination, ExtendedProducerProperties<OnsProducerProperties> producerProperties, MessageChannel errorChannel) throws Exception {
 
+        OnsProducerMessageHandler messageHandler = new OnsProducerMessageHandler(destination.getName(), configurationProperties, producerProperties);
+        messageHandler.setBeanFactory(this.getBeanFactory());
+        return messageHandler;
+    }
+
+//    @Override
+    protected MessageHandler createProducerMessageHandler(ProducerDestination destination, ExtendedProducerProperties<OnsProducerProperties> producerProperties) throws Exception {
         OnsProducerMessageHandler messageHandler = new OnsProducerMessageHandler(destination.getName(), configurationProperties, producerProperties);
         messageHandler.setBeanFactory(this.getBeanFactory());
         return messageHandler;
